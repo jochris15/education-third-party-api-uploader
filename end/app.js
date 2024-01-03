@@ -7,6 +7,7 @@ const cors = require("cors");
 const express = require("express");
 const app = express();
 const port = 3000;
+const axios = require("axios");
 const upload = require('./utils/multer')
 // Key: "file" is the key from the form-data
 const middlewareUpload = upload.single("file");
@@ -27,10 +28,9 @@ app.get("/", (req, res) => {
 app.get("/pokemon", async (req, res, next) => {
   try {
     // TODO: Get the pokemon from the third party API
-    const { pokemonAPI } = require('./api/axios')
     // This is the query parameters that we need to pass to the API
     // https://pokeapi.co/api/v2/pokemon?offset=0&limit=50
-    const { data } = await pokemonAPI.get('/?offset=0&limit=50')
+    const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=50')
 
     res.status(200).json({
       data
