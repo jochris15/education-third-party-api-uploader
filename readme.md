@@ -14,5 +14,6 @@ Stack:
 2. Follow instruction on site :
     - [PokeAPI](https://pokeapi.co/)
     - [Multer](https://www.npmjs.com/package/multer)
+        - see usage & memoryStorage section
     - [ImageKit](https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload)
 3. If you lost, see the end pack

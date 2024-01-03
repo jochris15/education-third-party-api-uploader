@@ -21,7 +21,7 @@ app.get("/pokemon", async (req, res, next) => {
   }
 });
 
-app.post("/upload", async (req, res, next) => {
+app.post("/upload", middlewareUpload, async (req, res, next) => {
   try {
     // TODO: Upload the file and return the result
   } catch (err) {

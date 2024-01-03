@@ -61,9 +61,9 @@ app.post("/upload", middlewareUpload, async (req, res, next) => {
       tags: ["test"],
     });
 
-    console.log(result);
     res.status(201).json({
-      message: "Upload success, see console for the result",
+      message: "Upload success",
+      result
     });
   } catch (err) {
     next(err);
