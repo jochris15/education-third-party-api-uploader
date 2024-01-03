@@ -1,9 +1,3 @@
-// If not production, use dotenv
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
-
-const cors = require("cors");
 const express = require("express");
 const app = express();
 const port = 3000;
@@ -14,7 +8,6 @@ const middlewareUpload = upload.single("file");
 const imagekit = require('./utils/imageKit')
 
 // Middleware
-app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
