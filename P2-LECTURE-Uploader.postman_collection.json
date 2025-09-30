@@ -32,7 +32,7 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "image",
+							"key": "file",
 							"type": "file",
 							"src": []
 						}

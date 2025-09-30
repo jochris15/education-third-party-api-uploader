@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require("express");
 const app = express();
 const port = 3000;
@@ -48,13 +50,10 @@ app.post("/upload", middlewareUpload, async (req, res, next) => {
     }
     */
 
-    // Usually we need to convert the image (Buffer) to base64 (string)
-    const imageInBase64 = req.file.buffer.toString("base64");
-
     // Upload the file to ImageKit
     // https://www.npmjs.com/package/imagekit#file-upload
     const result = await imagekit.upload({
-      file: imageInBase64,
+      file: req.file.buffer,
       // Get the filename from the originalname (req.file)
       fileName: req.file.originalname,
       // [Optional] set the image tags
@@ -63,7 +62,7 @@ app.post("/upload", middlewareUpload, async (req, res, next) => {
 
     res.status(201).json({
       message: "Upload success",
-      result
+      url: result.url
     });
   } catch (err) {
     next(err);
