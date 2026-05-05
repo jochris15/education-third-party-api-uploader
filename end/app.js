@@ -4,10 +4,8 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const axios = require("axios");
-const upload = require('./utils/multer')
-// Key: "file" is the key from the form-data
-const middlewareUpload = upload.single("file");
-const imagekit = require('./utils/imageKit')
+const upload = require("./utils/multer");
+const ImageKit = require('@imagekit/nodejs')
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -23,47 +21,35 @@ app.get("/", (req, res) => {
 app.get("/pokemon", async (req, res, next) => {
   try {
     // TODO: Get the pokemon from the third party API
-    // This is the query parameters that we need to pass to the API
-    // https://pokeapi.co/api/v2/pokemon?offset=0&limit=50
-    const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=50')
+    const { data } = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0")
 
     res.status(200).json({
-      data
-    });
+      message: "Succeed read data pokemon",
+      data: data.results
+    })
   } catch (err) {
     next(err);
   }
 });
 
-app.post("/upload", middlewareUpload, async (req, res, next) => {
+app.post("/upload", upload.single("image"), async (req, res, next) => {
   try {
     // TODO: Upload the file and return the result
-    /*
-    req.file 
-    {
-      fieldname: string,
-      originalname: string,
-      encoding: string,
-      mimetype: string,
-      buffer: Buffer,
-      size: number
-    }
-    */
 
-    // Upload the file to ImageKit
-    // https://www.npmjs.com/package/imagekit#file-upload
-    const result = await imagekit.upload({
-      file: req.file.buffer,
-      // Get the filename from the originalname (req.file)
-      fileName: req.file.originalname,
-      // [Optional] set the image tags
-      tags: ["test"],
+    // Initialization imagekit
+    const client = new ImageKit({
+      privateKey: process.env.IMAGEKIT_PRIVATE_KEY, // from dashboard, developer option at imagekit
     });
 
-    res.status(201).json({
-      message: "Upload success",
-      url: result.url
+    const response = await client.files.upload({
+      file: await ImageKit.toFile(Buffer.from(req.file.buffer), "image"), // input buffer from req.file here
+      fileName: req.file.originalname, // input original name from req.file here
     });
+
+    res.status(200).json({
+      message: "Succeed upload image",
+      url: response.url
+    })
   } catch (err) {
     next(err);
   }
@@ -77,7 +63,7 @@ app.use((err, req, res, next) => {
 
   console.error(err.stack);
   res.status(statusCode).json({
-    message
+    message,
   });
 });
 
